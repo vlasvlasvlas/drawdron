@@ -1,0 +1,107 @@
+{
+  "textures": [
+    {
+      "id": "deep-hum",
+      "name": "Deep Hum",
+      "color": "#00D9FF",
+      "growthSpeed": 0.6,
+      "fadeTime": 18,
+      "oscillator": {
+        "type": "sawtooth",
+        "detune": 8
+      },
+      "filter": {
+        "type": "lowpass",
+        "maxFreq": 4000,
+        "Q": 1.5
+      },
+      "effects": {
+        "reverb": 0.6,
+        "reverbDecay": 6,
+        "delay": 0.15,
+        "delayTime": "4n",
+        "delayFeedback": 0.4,
+        "tremolo": 0,
+        "distortion": 0.05,
+        "chorus": 0.2
+      },
+      "envelope": {
+        "attack": 2.5,
+        "release": 6
+      },
+      "note": "C2"
+    },
+    {
+      "id": "shimmer",
+      "name": "Shimmer",
+      "color": "#A855F7",
+      "growthSpeed": 1.4,
+      "fadeTime": 12,
+      "oscillator": {
+        "type": "sine",
+        "detune": 12
+      },
+      "filter": {
+        "type": "lowpass",
+        "maxFreq": 12000,
+        "Q": 0.5
+      },
+      "effects": {
+        "reverb": 0.85,
+        "reverbDecay": 8,
+        "delay": 0.5,
+        "delayTime": "8n.",
+        "delayFeedback": 0.5,
+        "tremolo": 0.3,
+        "tremoloRate": 3,
+        "distortion": 0,
+        "chorus": 0.6
+      },
+      "envelope": {
+        "attack": 0.8,
+        "release": 10
+      },
+      "lfo": {
+        "rate": 0.3,
+        "depth": 0.4
+      },
+      "note": "E4"
+    },
+    {
+      "id": "pulse",
+      "name": "Pulse",
+      "color": "#EF4444",
+      "growthSpeed": 0.4,
+      "fadeTime": 22,
+      "oscillator": {
+        "type": "square",
+        "detune": 0
+      },
+      "filter": {
+        "type": "bandpass",
+        "maxFreq": 3000,
+        "Q": 6
+      },
+      "effects": {
+        "reverb": 0.35,
+        "reverbDecay": 3,
+        "delay": 0.6,
+        "delayTime": "16n",
+        "delayFeedback": 0.6,
+        "tremolo": 0.7,
+        "tremoloRate": 6,
+        "distortion": 0.25,
+        "chorus": 0
+      },
+      "envelope": {
+        "attack": 0.2,
+        "release": 4
+      },
+      "lfo": {
+        "rate": 2.5,
+        "depth": 0.6
+      },
+      "note": "A2"
+    }
+  ]
+}

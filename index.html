@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DrawDron - Generative Drone Instrument</title>
+  <meta name="description" content="Draw on canvas to create evolving drone music with L-System branching visuals">
+
+  <!-- Paper.js for canvas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.17/paper-full.min.js"></script>
+  <!-- Tone.js for audio synthesis -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <!-- Main Canvas -->
+  <canvas id="canvas" resize></canvas>
+
+  <!-- Hint overlay -->
+  <div id="hint">Dibujá sobre mí</div>
+
+  <!-- Texture selector -->
+  <div class="texture-bar">
+    <button class="texture-btn active" data-texture="0">1</button>
+    <button class="texture-btn" data-texture="1">2</button>
+    <button class="texture-btn" data-texture="2">3</button>
+    <button class="texture-btn add-btn" id="addTexture">+</button>
+  </div>
+
+  <!-- Texture Editor Panel (collapsible) -->
+  <div id="editor-panel" class="editor-panel hidden">
+    <div class="editor-header">
+      <h3>Texture Editor</h3>
+      <button id="closeEditor" class="close-btn">×</button>
+    </div>
+    <div class="editor-content">
+      <!-- Basic -->
+      <div class="editor-section">
+        <h4>Basic</h4>
+        <div class="editor-row">
+          <label>Name</label>
+          <input type="text" id="textureName" value="New Texture">
+        </div>
+        <div class="editor-row">
+          <label>Color</label>
+          <input type="color" id="textureColor" value="#00D9FF">
+        </div>
+        <div class="editor-row">
+          <label>Note</label>
+          <select id="note">
+            <option value="C1">C1</option>
+            <option value="C2">C2</option>
+            <option value="E2">E2</option>
+            <option value="G2">G2</option>
+            <option value="A2">A2</option>
+            <option value="C3" selected>C3</option>
+            <option value="E3">E3</option>
+            <option value="G3">G3</option>
+            <option value="A3">A3</option>
+            <option value="C4">C4</option>
+            <option value="E4">E4</option>
+            <option value="G4">G4</option>
+            <option value="A4">A4</option>
+            <option value="C5">C5</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Oscillator -->
+      <div class="editor-section">
+        <h4>Oscillator</h4>
+        <div class="editor-row">
+          <label>Waveform</label>
+          <select id="waveform">
+            <option value="sine">Sine</option>
+            <option value="sawtooth">Sawtooth</option>
+            <option value="square">Square</option>
+            <option value="triangle">Triangle</option>
+          </select>
+        </div>
+        <div class="editor-row">
+          <label>Detune <span id="detuneVal">5</span></label>
+          <input type="range" id="detune" min="0" max="30" value="5">
+        </div>
+      </div>
+
+      <!-- Filter -->
+      <div class="editor-section">
+        <h4>Filter</h4>
+        <div class="editor-row">
+          <label>Type</label>
+          <select id="filterType">
+            <option value="lowpass">Lowpass</option>
+            <option value="highpass">Highpass</option>
+            <option value="bandpass">Bandpass</option>
+          </select>
+        </div>
+        <div class="editor-row">
+          <label>Resonance (Q) <span id="filterQVal">1</span></label>
+          <input type="range" id="filterQ" min="0.1" max="15" step="0.1" value="1">
+        </div>
+      </div>
+
+      <!-- Envelope -->
+      <div class="editor-section">
+        <h4>Envelope</h4>
+        <div class="editor-row">
+          <label>Attack <span id="attackVal">1</span>s</label>
+          <input type="range" id="attack" min="0.01" max="8" step="0.01" value="1">
+        </div>
+        <div class="editor-row">
+          <label>Release <span id="releaseVal">5</span>s</label>
+          <input type="range" id="release" min="0.1" max="30" step="0.1" value="5">
+        </div>
+      </div>
+
+      <!-- Effects Chain -->
+      <div class="editor-section">
+        <h4>Effects Chain</h4>
+        <div class="editor-row">
+          <label>Tremolo <span id="tremoloVal">0</span></label>
+          <input type="range" id="tremolo" min="0" max="1" step="0.05" value="0">
+        </div>
+        <div class="editor-row">
+          <label>Tremolo Rate <span id="tremoloRateVal">4</span>Hz</label>
+          <input type="range" id="tremoloRate" min="0.5" max="20" step="0.5" value="4">
+        </div>
+        <div class="editor-row">
+          <label>Distortion <span id="distortionVal">0</span></label>
+          <input type="range" id="distortion" min="0" max="1" step="0.05" value="0">
+        </div>
+        <div class="editor-row">
+          <label>Delay <span id="delayVal">0.3</span></label>
+          <input type="range" id="delay" min="0" max="1" step="0.05" value="0.3">
+        </div>
+        <div class="editor-row">
+          <label>Reverb <span id="reverbVal">0.5</span></label>
+          <input type="range" id="reverb" min="0" max="1" step="0.05" value="0.5">
+        </div>
+        <div class="editor-row">
+          <label>Chorus <span id="chorusVal">0</span></label>
+          <input type="range" id="chorus" min="0" max="1" step="0.05" value="0">
+        </div>
+      </div>
+
+      <!-- Arpeggiator -->
+      <div class="editor-section">
+        <h4>Arpeggiator</h4>
+        <div class="editor-row">
+          <label>Enable</label>
+          <input type="checkbox" id="arpEnabled">
+        </div>
+        <div class="editor-row">
+          <label>Pattern</label>
+          <select id="arpPattern">
+            <option value="up">Up ↑</option>
+            <option value="down">Down ↓</option>
+            <option value="upDown">Up-Down ↑↓</option>
+            <option value="downUp">Down-Up ↓↑</option>
+            <option value="random">Random ⚡</option>
+          </select>
+        </div>
+        <div class="editor-row">
+          <label>Octaves <span id="arpOctavesVal">2</span></label>
+          <input type="range" id="arpOctaves" min="1" max="4" step="1" value="2">
+        </div>
+        <div class="editor-row">
+          <label>Rate <span id="arpRateVal">8n</span></label>
+          <select id="arpRate">
+            <option value="1n">1n (Whole)</option>
+            <option value="2n">2n (Half)</option>
+            <option value="4n">4n (Quarter)</option>
+            <option value="8n" selected>8n (Eighth)</option>
+            <option value="16n">16n (Sixteenth)</option>
+            <option value="32n">32n (Fast)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Growth -->
+      <div class="editor-section">
+        <h4>Visual</h4>
+        <div class="editor-row">
+          <label>Growth Speed <span id="growthVal">1</span></label>
+          <input type="range" id="growthSpeed" min="0.2" max="2.5" step="0.1" value="1">
+        </div>
+        <div class="editor-row">
+          <label>Fade Time <span id="fadeVal">15</span>s</label>
+          <input type="range" id="fadeTime" min="3" max="40" step="1" value="15">
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="editor-actions">
+        <button id="previewSound" class="action-btn">▶ Preview</button>
+        <button id="saveTexture" class="action-btn primary">Save</button>
+      </div>
+      <div class="editor-actions">
+        <button id="exportTextures" class="action-btn">Export JSON</button>
+        <button id="importTextures" class="action-btn">Import JSON</button>
+        <input type="file" id="importFile" accept=".json" style="display:none">
+      </div>
+    </div>
+  </div>
+
+  <!-- Info panel -->
+  <div id="info-panel" class="info-panel">
+    <div class="param-display">
+      <span class="param-label">Filter:</span>
+      <span id="filterDisplay" class="param-value">--</span>
+    </div>
+    <div class="param-display">
+      <span class="param-label">Pan:</span>
+      <span id="panDisplay" class="param-value">C</span>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/textures.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/lsystem.js"></script>
+  <script src="js/canvas.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+
+</html>
