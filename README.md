@@ -115,7 +115,7 @@ Sin build tools. Vanilla JS puro.
 
 ## 📝 Licencia
 
-MIT License — Usá libremente, modificá, distribuí.
+[CC BY-SA 4.0](LICENSE) — © Vladimiro Bellini ([vlasvlasvlas](https://github.com/vlasvlasvlas)). Ver [LICENSE](LICENSE) para los términos completos.
 
 ---
 
@@ -124,4 +124,4 @@ MIT License — Usá libremente, modificá, distribuí.
 Inspirado en [L-Drones](https://codepen.io/teropa/pen/opjrBE) de Tero Parviainen.
 ## License
 
-MIT License — © 2026 [Vladimiro Bellini](https://github.com/vlasvlasvlas). Free to use and modify, attribution required.
+[CC BY-SA 4.0](LICENSE) — © Vladimiro Bellini ([vlasvlasvlas](https://github.com/vlasvlasvlas)). Ver [LICENSE](LICENSE) para los términos completos.
