@@ -122,3 +122,6 @@ MIT License — Usá libremente, modificá, distribuí.
 ## 🙏 Créditos
 
 Inspirado en [L-Drones](https://codepen.io/teropa/pen/opjrBE) de Tero Parviainen.
+## License
+
+MIT License — © 2026 [Vladimiro Bellini](https://github.com/vlasvlasvlas). Free to use and modify, attribution required.
